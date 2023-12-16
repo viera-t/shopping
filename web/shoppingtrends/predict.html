@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict Shopping Trends</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <h1>Predict Shopping Trends</h1>
+            </div>
+            <div class="col-md-6 text-right">
+                <button class="btn btn-primary" id="trainButton">Create New Model</button>
+            </div>
+        </div>
+        <form id="updateForm">
+            <input type="hidden" id="recordId" name="recordId">
+            <div class="form-group">
+                <label for="Customer_ID">Customer_ID</label>
+                <input type="number" class="form-control" id="Customer_ID" name="Customer_ID" required>
+            </div>
+            <div class="form-group">
+                <label for="Age">Age</label>
+                <input type="number" class="form-control" id="Age" name="Age" required>
+            </div>
+            <div class="form-group">
+                <label for="Review_Rating">Review Rating</label>
+                <input type="number" class="form-control" id="Review_Rating" name="Review_Rating" required>
+            </div>
+            <div class="form-group">
+                <label for="Previous_Purchases">Previous Purchases</label>
+                <input type="number" class="form-control" id="Previous_Purchases" name="Previous_Purchases" required>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-primary mt-2">Predict Record</button>
+                </div>
+                <div class="col-md-6">
+                    <h1 id="Purchase_Amount_USD_predict"></h1>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+        const updateForm = document.getElementById('updateForm');
+        const recordIdField = document.getElementById('recordId');
+
+        const trainButton = document.getElementById('trainButton');
+        trainButton.addEventListener('click', async () => {
+            const response = await fetch(`/shopping_model/train`, {
+                method: 'GET'
+            });
+
+            if (response.ok) {
+                // Handle success, maybe show a message or perform other actions
+                alert('Model training started successfully');
+            } else {
+                // Handle error
+                console.error('Error starting model training');
+            }
+        });
+        
+        // Extract record ID from URL query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const recordId = urlParams.get('id');
+        
+        // Fill the hidden input field with the record ID
+        recordIdField.value = recordId;
+        
+        // Fetch and populate data for the record
+        async function populateFormData() {
+            const response = await fetch(`/shopping/${recordId}`);
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('Customer_ID').value = data.Customer_ID;
+                document.getElementById('Age').value = data.Age;
+                // document.getElementById('Gender').value = data.Gender;
+                // document.getElementById('Item_Purchased').value = data.Item_Purchased;
+                // document.getElementById('Category').value = data.Category;
+                // document.getElementById('purchase_amount_usd').value = data.purchase_amount_usd;
+                // document.getElementById('Location').value = data.Location;
+                // document.getElementById('Size').value = data.Size;
+                // document.getElementById('Color').value = data.Color;
+                // document.getElementById('Season').value = data.Season;
+                document.getElementById('Review_Rating').value = data.Review_Rating;
+                // document.getElementById('Subscription_Status').value = data.Subscription_Status;
+                // document.getElementById('Payment_Method').value = data.Payment_Method;
+                // document.getElementById('Shipping_Type').value = data.Shipping_Type;
+                // document.getElementById('Discount_Applied').value = data.Discount_Applied;
+                // document.getElementById('Promo_Code_Used').value = data.Promo_Code_Used;
+                document.getElementById('Previous_Purchases').value = data.Previous_Purchases;
+                // document.getElementById('Preferred_Payment_Method').value = data.Preferred_Payment_Method;
+                // document.getElementById('Frequency_Of_Purchases').value = data.Frequency_Of_Purchases;
+
+            } else {
+                // Handle error
+            }
+        }
+
+        updateForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(updateForm);
+
+            const response = await fetch(`/shopping_model/predict`, {
+                method: 'POST',
+                body: JSON.stringify(Object.fromEntries(formData.entries())),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                // Handle success, redirect or show a message
+                const predictionData = await response.json();
+                document.getElementById('Purchase_Amount_USD_predict').innerHTML = "Purchase_Amount_USD: "+predictionData.Purchase_Amount_USD;
+                // window.location.href = `/telecomchurn_view/index`;
+            } else {
+                // Handle error
+            }
+        });
+
+        // Populate the form fields with existing data when the page loads
+        populateFormData();
+    </script>
+</body>
+</html>
+ 

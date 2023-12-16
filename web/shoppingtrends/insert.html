@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Shopping Trends Record</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Insert Shopping Trends Record</h1>
+        <form id="insertForm">
+            <div class="form-group">
+                <label for="Age">Age</label>
+                <input type="number" class="form-control" id="Age" name="Age" required>
+            </div>
+            <div class="form-group">
+                <label for="Gender">Gender</label>
+                <select class="form-control" id="Gender" name="Gender" required>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="Item_Purchased">Item Purchased</label>
+                <input type="text" class="form-control" id="Item_Purchased" name="Item_Purchased" required>
+            </div>
+            <div class="form-group">
+                <label for="Category">Category</label>
+                <input type="text" class="form-control" id="Category" name="Category" required>
+            </div>
+            <div class="form-group">
+                <label for="Purchase_Amount_USD">Purchase Amount (USD)</label>
+                <input type="number" class="form-control" id="Purchase_Amount_USD" name="Purchase_Amount_USD" required>
+            </div>
+            <div class="form-group">
+                <label for="Location">Location</label>
+                <input type="text" class="form-control" id="Location" name="Location" required>
+            </div>
+            <div class="form-group">
+                <label for="Size">Size</label>
+                <input type="text" class="form-control" id="Size" name="Size" required>
+            </div>
+            <div class="form-group">
+                <label for="Color">Color</label>
+                <input type="text" class="form-control" id="Color" name="Color" required>
+            </div>
+            <div class="form-group">
+                <label for="Season">Season</label>
+                <input type="text" class="form-control" id="Season" name="Season" required>
+            </div>
+            <div class="form-group">
+                <label for="Review_Rating">Review_Rating</label>
+                <input type="number" class="form-control" id="Review_Rating" name="Review_Rating" required>
+            </div>
+            <div class="form-group">
+                <label for="Subscription_Status">Subscription Status</label>
+                <input type="text" class="form-control" id="Subscription_Status" name="Subscription_Status" required>
+            </div>
+            <div class="form-group">
+                <label for="Payment_Method">Payment Method</label>
+                <input type="text" class="form-control" id="Payment_Method" name="Payment_Method" required>
+            </div>
+            <div class="form-group">
+                <label for="Shipping_Type">Shipping Type</label>
+                <input type="text" class="form-control" id="Shipping_Type" name="Shipping_Type" required>
+            </div>
+            <div class="form-group">
+                <label for="Discount_Applied">Discount Applied</label>
+                <input type="text" class="form-control" id="Discount_Applied" name="Discount_Applied" required>
+            </div>
+            <div class="form-group">
+                <label for="Promo_Code_Used">Promo Code Used</label>
+                <input type="text" class="form-control" id="Promo_Code_Used" name="Promo_Code_Used" required>
+            </div>
+            <div class="form-group">
+                <label for="Previous_Purchases">Previous_Purchases</label>
+                <input type="number" class="form-control" id="Previous_Purchases" name="Previous_Purchases" required>
+            </div>
+            <div class="form-group">
+                <label for="Preferred_Payment_Method">Preferred Payment Method</label>
+                <input type="text" class="form-control" id="Preferred_Payment_Method" name="Preferred_Payment_Method" required>
+            </div>
+            <div class="form-group">
+                <label for="Frequency_of_Purchases">Frequency of Purchases</label>
+                <input type="text" class="form-control" id="Frequency_of_Purchases" name="Frequency_of_Purchases" required>
+            </div>
+            
+
+            <button type="submit" class="btn btn-primary mt-2">Insert Record</button>
+        </form>
+    </div>
+
+    <script>
+        const insertForm = document.getElementById('insertForm');
+        insertForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(insertForm);
+
+            const response = await fetch('/shoppng/', {
+                method: 'POST',
+                body: JSON.stringify(Object.fromEntries(formData.entries())),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                // Handle success, redirect or show a message
+                window.location.href = `/shopping_view/index`;
+            } else {
+                // Handle error
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Trends Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Shopping Trends</h1>
+        <a href="/shopping_view/insert" class="btn btn-primary mt-2">Add New Record</a>
+        <div class="row mt-4">
+            <div class="col">
+                <h2>Shopping Trends Records</h2>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Age</th>
+                                <th>Gender</th>
+                                <th>Item Purchased</th>
+                                <th>Category</th>
+                                <th>Purchase Amount USD</th>
+                                <th>Location</th>
+                                <th>Size</th>
+                                <th>Color</th>
+                                <th>Season</th>
+                                <th>Review Rating</th>
+                                <th>Subscription Status</th>
+                                <th>Payment Method</th>
+                                <th>Shipping Type</th>
+                                <th>Discount Applied</th>
+                                <th>Promo Code Used</th>
+                                <th>Previous Purchases</th>
+                                <th>Preferred Payment Method</th>
+                                <th>Frequency of Purchases</th>
+                            </tr>
+                        </thead>
+                        <tbody id="shoppingTableBody">
+                            <!-- Data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function deleteRecord(recordId) {
+            const response = await fetch(`/shopping/${recordId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                window.location.href = `/shopping_view/index`;
+            } else {
+                // Handle error
+            }
+        }
+
+        function confirmDelete(recordId) {
+            if (confirm('Are you sure you want to delete this record?')) {
+                // User confirmed, proceed with deletion
+                deleteRecord(recordId);
+            }
+        }
+
+        async function fetchChurnRecords() {
+            const response = await fetch('/shopping/');
+            const data = await response.json();
+
+            const shoppingTableBody = document.getElementById('shoppingTableBody');
+            shoppingTableBody.innerHTML = '';
+
+            data.forEach(record => {
+                shoppingTableBody.innerHTML += `
+                    <tr>
+                        <td>${record.Age}</td>
+                        <td>${record.Gender}</td>
+                        <td>${record.Item_Purchased}</td>
+                        <td>${record.Category}</td>
+                        <td>${record.Purchase_Amount_USD}</td>
+                        <td>${record.Location}</td>
+                        <td>${record.Size}</td>
+                        <td>${record.Color}</td>
+                        <td>${record.Season}</td>
+                        <td>${record.Review_Rating}</td>
+                        <td>${record.Subscription_Status}</td>
+                        <td>${record.Payment_Method}</td>
+                        <td>${record.Shipping_Type}</td>
+                        <td>${record.Discount_Applied}</td>
+                        <td>${record.Promo_Code_Used}</td>
+                        <td>${record.Previous_Purchases}</td>
+                        <td>${record.Preferred_Payment_Method}</td>
+                        <td>${record.Frequency_of_Purchases}</td>
+
+                        <td>
+                            <a href="/shopping_view/update?id=${record.Customer_ID}" class="btn btn-sm btn-info">Edit</a>
+                            <button class="btn btn-sm btn-danger" onclick="confirmDelete(${record.Customer_ID})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        fetchChurnRecords();
+    </script>
+</body>
+</html>
